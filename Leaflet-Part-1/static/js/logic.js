@@ -2,14 +2,14 @@ var link = "https://earthquake.usgs.gov/earthquakes/feed/v1.0/summary/significan
 
 // Perform a GET request to the query URL
 d3.json(link, function(data) {
-  // Once we get a response, send the data.features object to the createFeatures function
+  // get features in to the function
   createFeatures(data.features);
 });
 
 function createFeatures(earthquakeData) {
 
-  // Define a function we want to run once for each feature in the features array
-  // Give each feature a popup describing the place and time of the earthquake
+  // Function for each feature in the features array displaying descriptive popup
+  
   function onEachFeature(feature, layer) {
     layer.bindPopup("<h3> Where: " + feature.properties.place +
       "</h3><hr><p>" + new Date(feature.properties.time) + "</p>" + "<br><h2> Magnitude: " + feature.properties.mag + "</h2>");
@@ -34,17 +34,16 @@ function createFeatures(earthquakeData) {
     pointToLayer: createCircleMarker
   });
   
-  // Sending our earthquakes layer to the createMap function
+  //funtion to read earthquakes
   createMap(earthquakes);
 }
 
-// Function to choose color of cirlces for Map Plot based on Magnitude
-//Passes to CreateCircleMarker function above
+// Function for colours of circles depending on magnitude
+
 function chooseColor(mag) {
-  // console.log(mag)
+  
   switch(true) {
-      //case (0 <= mag && mag < 1.0):
-        //return "#aliceblue";
+
       case (1.0 <= mag && mag <= 2.5):
         return "#0071BC";
       case (2.5 <= mag && mag <= 4.0):
@@ -67,7 +66,7 @@ legend.onAdd = function (map) {
         grades = [1.0, 2.5, 4.0, 5.5, 7.0],
         labels = [];
 
-    // loop through our density intervals and generate a label with a colored square for each interval
+    // generate labels
     for (var i = 0; i < grades.length; i++) {
         div.innerHTML +=
             '<i style="background:' + chooseColor(grades[i] + 1) + '"></i> ' +
@@ -93,18 +92,18 @@ function createMap(earthquakes) {
     accessToken: API_KEY
   });
 
-  // Define a baseMaps object to hold our base layers
+  // base map object 
   var baseMaps = {
     "Outdoors Map": outdoorsmap,
     "Light Map": lightmap
   };
 
-  // Create overlay object to hold our overlay layer
+  // Create overlay object for overlay layer
   var overlayMaps = {
     Earthquakes: earthquakes
   };
 
-  // Create our map, giving it the streetmap and earthquakes layers to display on load
+  // Create map with the streetmap and earthquakes layers to display 
   var myMap = L.map("map", {
     center: [
       39.8282, -98.5795
@@ -113,9 +112,8 @@ function createMap(earthquakes) {
     layers: [outdoorsmap, earthquakes]
   });
 
-  // Create a layer control
-  // Pass in our baseMaps and overlayMaps
-  // Add the layer control to the map
+  // layer control
+  
   L.control.layers(baseMaps, overlayMaps, {
     collapsed: false
   }).addTo(myMap);
